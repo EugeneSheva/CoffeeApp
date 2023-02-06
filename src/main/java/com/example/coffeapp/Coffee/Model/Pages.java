@@ -34,4 +34,10 @@ public class Pages {
     String titleP4;
     String textP4;
 
+    public Pages() {
+    }
+
+    public Pages(Long id) {
+        this.id = id;
+    }
 }

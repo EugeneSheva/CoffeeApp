@@ -21,4 +21,6 @@ public class CoffeeAdditivesService {
     public CoffeeAdditive save(CoffeeAdditive coffeeAdditive) { return coffeeAdditivesRepository.save(coffeeAdditive); }
 
     public void deleteById(Long id) { coffeeAdditivesRepository.deleteById(id); }
+
+    public List<CoffeeAdditive> findAllById(Iterable<Long> ids){ return coffeeAdditivesRepository.findAllById(ids); }
 }

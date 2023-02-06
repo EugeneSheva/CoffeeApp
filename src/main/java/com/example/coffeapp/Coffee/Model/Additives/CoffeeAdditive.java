@@ -1,22 +1,26 @@
 package com.example.coffeapp.Coffee.Model.Additives;
 
 import com.example.coffeapp.Coffee.Model.Location;
+import com.example.coffeapp.Coffee.Model.OrderedProduct;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 
-@Data
+
 @Entity
+@Data
 public class CoffeeAdditive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
     Double price;
-    Type type;
+    @Enumerated (EnumType.STRING)
+    CoffeeAdditiveType coffeeAdditiveType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn (name = "locationId")
-    Location location;
+//    @ManyToMany(mappedBy = "coffeeAdditiveList")
+//    List<OrderedProduct> orderedProductList;
+
 }

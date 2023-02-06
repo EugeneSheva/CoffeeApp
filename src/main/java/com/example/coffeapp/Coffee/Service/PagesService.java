@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,8 @@ public class PagesService {
 
 
     public Pages findById (Long id) { return pagesRepository.getReferenceById(id); }
+
+    public Optional<Pages> getById(Long id) { return pagesRepository.findById(id);}
 
     public List<Pages> findAll() { return pagesRepository.findAll(); }
 

@@ -16,6 +16,5 @@ public class Location {
     Integer coordinates;
     String description;
     String image;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location", fetch = FetchType.EAGER)
-    List<Order> orderList;
+
 }

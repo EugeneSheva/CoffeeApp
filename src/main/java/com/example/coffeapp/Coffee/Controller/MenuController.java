@@ -1,7 +1,7 @@
 package com.example.coffeapp.Coffee.Controller;
 
 import com.example.coffeapp.Coffee.Model.Additives.CoffeeAdditive;
-import com.example.coffeapp.Coffee.Model.Additives.Type;
+import com.example.coffeapp.Coffee.Model.Additives.CoffeeAdditiveType;
 import com.example.coffeapp.Coffee.Model.Product.*;
 import com.example.coffeapp.Coffee.Service.*;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/menu")
 public class MenuController {
     @Value("${upload.path}")
     private String uploadPath;
@@ -38,27 +40,29 @@ public class MenuController {
         return "/Admin/Menu/admin-menu";
     }
 
+
     //Coffee
 
-    @GetMapping("coffee-list")
+
+    @GetMapping("/coffee-list")
     public String getCoffeeList(Model model) {
         List<Coffee>productList = coffeeService.findAll();
         model.addAttribute("product", productList);
         return "/Admin/Menu/coffee-list";
     }
-    @GetMapping("coffee-update/{id}")
+    @GetMapping("/coffee-update/{id}")
     public String coffeeEdit(@PathVariable("id") Long id, Model model) {
         Coffee coffee = coffeeService.findById(id);
         model.addAttribute("product", coffee);
         return "/Admin/Menu/coffee-card";
     }
-    @GetMapping("coffee-create")
+    @GetMapping("/coffee-create")
     public String newCoffeeCreate(Model model) {
         Coffee coffee = new Coffee();
         model.addAttribute("product", coffee);
         return "/Admin/Menu/coffee-card";
     }
-    @GetMapping("coffee-delete/{id}")
+    @GetMapping("/coffee-delete/{id}")
     public String delleteCoffee(@PathVariable("id") Long id) {
         Coffee obj = coffeeService.findById(id);
         try {
@@ -67,7 +71,7 @@ public class MenuController {
             throw new RuntimeException(e);
         }
         coffeeService.deleteById(id);
-        return "redirect:/coffee-list";
+        return "redirect:/menu/coffee-list";
     }
 
     @PostMapping("/coffee-card-save")
@@ -89,6 +93,19 @@ public class MenuController {
         coffee.setLPrice(lPrice);
         coffee.setXlValue(xlValue);
         coffee.setXlPrice(xlPrice);
+        String[] tmp = new String[4];
+        int i=0;
+        if (sPrice>0 && sPrice!=null && sValue!=null)
+            tmp[i] = "S"; i++;
+        if (mPrice>0 && mPrice!=null && mValue!=null)
+            tmp[i] = "M"; i++;
+        if (lPrice>0 && lPrice!=null && lValue!=null)
+            tmp[i] = "L"; i++;
+        if (xlPrice>0 && xlPrice!=null && xlValue!=null)
+            tmp[i] = "XL"; i++;
+
+        coffee.setSizes(tmp);
+
         //            сохранение  фото
         if (!(Files.exists(Path.of(uploadPath + "/img/coffee/"))))
             Files.createDirectories(Path.of(uploadPath + "/img/coffee/"));
@@ -111,30 +128,30 @@ public class MenuController {
 
         coffeeService.save(coffee);
 
-        return "redirect:/coffee-list";
+        return "redirect:/menu/coffee-list";
     }
 
     //Tea
 
-    @GetMapping("tea-list")
+    @GetMapping("/tea-list")
     public String getTeaList(Model model) {
         List<Tea>productList = teaService.findAll();
             model.addAttribute("product", productList);
         return "/Admin/Menu/tea-list";
     }
-    @GetMapping("tea-update/{id}")
+    @GetMapping("/tea-update/{id}")
     public String teaEdit(@PathVariable("id") Long id, Model model) {
         Tea tea = teaService.findById(id);
         model.addAttribute("product", tea);
         return "/Admin/Menu/tea-card";
     }
-    @GetMapping("tea-create")
+    @GetMapping("/tea-create")
     public String newTeaCreate(Model model) {
         Tea tea = new Tea();
         model.addAttribute("product", tea);
         return "/Admin/Menu/tea-card";
     }
-    @GetMapping("tea-delete/{id}")
+    @GetMapping("/tea-delete/{id}")
     public String delleteTea(@PathVariable("id") Long id) {
         Tea obj = teaService.findById(id);
         try {
@@ -143,7 +160,7 @@ public class MenuController {
             throw new RuntimeException(e);
         }
        teaService.deleteById(id);
-        return "redirect:/tea-list";
+        return "redirect:/menu/tea-list";
     }
 
     @PostMapping("/tea-card-save")
@@ -179,30 +196,30 @@ public class MenuController {
 
         teaService.save(tea);
 
-        return "redirect:/tea-list";
+        return "redirect:/menu/tea-list";
     }
 
 //   Snack
 
-    @GetMapping("snack-list")
+    @GetMapping("/snack-list")
     public String getSnackList(Model model) {
         List<Snack>productList = snackService.findAll();
         model.addAttribute("product", productList);
         return "/Admin/Menu/snack-list";
     }
-    @GetMapping("snack-update/{id}")
+    @GetMapping("/snack-update/{id}")
     public String snackEdit(@PathVariable("id") Long id, Model model) {
         Snack snack = snackService.findById(id);
         model.addAttribute("product", snack);
         return "/Admin/Menu/snack-card";
     }
-    @GetMapping("snack-create")
+    @GetMapping("/snack-create")
     public String newSnackCreate(Model model) {
         Snack snack = new Snack();
         model.addAttribute("product", snack);
         return "/Admin/Menu/snack-card";
     }
-    @GetMapping("snack-delete/{id}")
+    @GetMapping("/snack-delete/{id}")
     public String delleteSnack(@PathVariable("id") Long id) {
         Snack obj = snackService.findById(id);
         try {
@@ -211,7 +228,7 @@ public class MenuController {
             throw new RuntimeException(e);
         }
         snackService.deleteById(id);
-        return "redirect:/snack-list";
+        return "redirect:/menu/snack-list";
     }
 
     @PostMapping("/snack-card-save")
@@ -247,30 +264,30 @@ public class MenuController {
 
         snackService.save(snack);
 
-        return "redirect:/snack-list";
+        return "redirect:/menu/snack-list";
     }
 
 //   dessert
 
-    @GetMapping("dessert-list")
+    @GetMapping("/dessert-list")
     public String getDessertList(Model model) {
         List<Dessert>productList = dessertService.findAll();
         model.addAttribute("product", productList);
         return "/Admin/Menu/dessert-list";
     }
-    @GetMapping("dessert-update/{id}")
+    @GetMapping("/dessert-update/{id}")
     public String dessertEdit(@PathVariable("id") Long id, Model model) {
         Dessert dessert = dessertService.findById(id);
         model.addAttribute("product", dessert);
         return "/Admin/Menu/dessert-card";
     }
-    @GetMapping("dessert-create")
+    @GetMapping("/dessert-create")
     public String newDessertCreate(Model model) {
         Dessert dessert = new Dessert();
         model.addAttribute("product", dessert);
         return "/Admin/Menu/dessert-card";
     }
-    @GetMapping("dessert-delete/{id}")
+    @GetMapping("/dessert-delete/{id}")
     public String delleteDessert(@PathVariable("id") Long id) {
         Dessert obj = dessertService.findById(id);
         try {
@@ -279,7 +296,7 @@ public class MenuController {
             throw new RuntimeException(e);
         }
         dessertService.deleteById(id);
-        return "redirect:/dessert-list";
+        return "redirect:/menu/dessert-list";
     }
 
     @PostMapping("/dessert-card-save")
@@ -315,30 +332,30 @@ public class MenuController {
 
         dessertService.save(dessert);
 
-        return "redirect:/dessert-list";
+        return "redirect:/menu/dessert-list";
     }
 
     //   sandwich
 
-    @GetMapping("sandwich-list")
+    @GetMapping("/sandwich-list")
     public String getSandwichList(Model model) {
         List<Sandwich>productList = sandwichService.findAll();
         model.addAttribute("product", productList);
         return "/Admin/Menu/sandwich-list";
     }
-    @GetMapping("sandwich-update/{id}")
+    @GetMapping("/sandwich-update/{id}")
     public String sandwichEdit(@PathVariable("id") Long id, Model model) {
         Sandwich sandwich = sandwichService.findById(id);
         model.addAttribute("product", sandwich);
         return "/Admin/Menu/sandwich-card";
     }
-    @GetMapping("sandwich-create")
+    @GetMapping("/sandwich-create")
     public String newSandwichCreate(Model model) {
         Sandwich sandwich = new Sandwich();
         model.addAttribute("product", sandwich);
         return "/Admin/Menu/sandwich-card";
     }
-    @GetMapping("sandwich-delete/{id}")
+    @GetMapping("/sandwich-delete/{id}")
     public String delleteSandwich(@PathVariable("id") Long id) {
         Sandwich obj = sandwichService.findById(id);
         try {
@@ -347,7 +364,7 @@ public class MenuController {
             throw new RuntimeException(e);
         }
         sandwichService.deleteById(id);
-        return "redirect:/sandwich-list";
+        return "redirect:/menu/sandwich-list";
     }
 
     @PostMapping("/sandwich-card-save")
@@ -380,47 +397,148 @@ public class MenuController {
             if (oldSandwich.getImage() != null)
                 sandwich.setImage(oldSandwich.getImage());
         }
-
         sandwichService.save(sandwich);
 
-        return "redirect:/sandwich-list";
+        return "redirect:/menu/sandwich-list";
     }
 
 
-    @GetMapping("admin-menu-additives/{id}")
+    @GetMapping("/admin-menu-additives/{id}")
     public String additivesList(@PathVariable("id") String id, Model model) {
         System.out.println(id);
         List<CoffeeAdditive> coffeeAdditiveList = coffeeAdditivesService.findAll();
-        if (id.equalsIgnoreCase("SYRUPS")) {
+        if (id.equalsIgnoreCase("SYRUP")) {
             List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
-                            filter(coffeeAdditive -> coffeeAdditive.getType().
-                            equals(Type.SYRUPS)).collect(Collectors.toList());
+                            filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.SYRUP)).collect(Collectors.toList());
             System.out.println(productList);
             model.addAttribute("productList", productList);
-            model.addAttribute("type", "SYRUPS");
+            model.addAttribute("type", "SYRUP");
         } else if (id.equalsIgnoreCase("ALCOHOL")) {
             List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
-                    filter(coffeeAdditive -> coffeeAdditive.getType().
-                            equals(Type.ALCOHOL)).collect(Collectors.toList());
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ALCOHOL)).collect(Collectors.toList());
             System.out.println(productList);
             model.addAttribute("productList", productList);
             model.addAttribute("type", "ALCOHOL");
         } else if (id.equalsIgnoreCase("MILK")) {
             List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
-                    filter(coffeeAdditive -> coffeeAdditive.getType().
-                            equals(Type.MILK)).collect(Collectors.toList());
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.MILK)).collect(Collectors.toList());
             System.out.println(productList);
             model.addAttribute("productList", productList);
             model.addAttribute("type", "MILK");
         } else if (id.equalsIgnoreCase("ADD")) {
             List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
-                    filter(coffeeAdditive -> coffeeAdditive.getType().
-                            equals(Type.ADD)).collect(Collectors.toList());
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ADD)).collect(Collectors.toList());
             System.out.println(productList);
             model.addAttribute("productList", productList);
             model.addAttribute("type", "ADD");
         }
         return "/Admin/Menu/additives-list";
     }
+    @GetMapping("/add-create/{id}")
+    public String newAddCreate(@PathVariable("id") String addType, Model model) {
 
+        List<CoffeeAdditive> coffeeAdditiveList = coffeeAdditivesService.findAll();
+        if (addType.equalsIgnoreCase("SYRUP")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.SYRUP)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "SYRUP");
+        } else if (addType.equalsIgnoreCase("ALCOHOL")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ALCOHOL)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "ALCOHOL");
+        } else if (addType.equalsIgnoreCase("MILK")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.MILK)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "MILK");
+        } else if (addType.equalsIgnoreCase("ADD")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ADD)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "ADD");
+        }
+
+        CoffeeAdditive coffeeAdditive = new CoffeeAdditive();
+
+        model.addAttribute("coffeeAdditive", coffeeAdditive);
+        return "/Admin/Menu/additives-card";
+    }
+
+    @PostMapping("/add-save")
+    public String saveAdd(@RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam(name = "name", defaultValue = "") String name, @RequestParam(name = "price", defaultValue = "") Double price, @RequestParam(name = "coffeeAdditiveType", defaultValue = "") String addType) throws IOException {
+        CoffeeAdditive coffeeAdditive = new CoffeeAdditive();
+        if (id>0) coffeeAdditive.setId(id);
+        coffeeAdditive.setName(name);
+        coffeeAdditive.setPrice(price);
+        if (addType.equalsIgnoreCase("SYRUP")) {
+            coffeeAdditive.setCoffeeAdditiveType(CoffeeAdditiveType.SYRUP);
+        } else if (addType.equalsIgnoreCase("ALCOHOL")) {
+            coffeeAdditive.setCoffeeAdditiveType(CoffeeAdditiveType.ALCOHOL);
+        } else if (addType.equalsIgnoreCase("MILK")) {
+            coffeeAdditive.setCoffeeAdditiveType(CoffeeAdditiveType.MILK);
+        } else if (addType.equalsIgnoreCase("ADD")) {
+            coffeeAdditive.setCoffeeAdditiveType(CoffeeAdditiveType.ADD);
+        }
+        coffeeAdditivesService.save(coffeeAdditive);
+        return "redirect:/menu/admin-menu-additives/"+coffeeAdditive.getCoffeeAdditiveType();
+    }
+    @GetMapping("/add-update/{id}")
+    public String addEdit(@PathVariable("id") Long id, Model model) {
+        CoffeeAdditive coffeeAdd = coffeeAdditivesService.findById(id);
+        model.addAttribute("coffeeAdditive", coffeeAdd);
+        String addType = coffeeAdd.getCoffeeAdditiveType().name();
+        List<CoffeeAdditive> coffeeAdditiveList = coffeeAdditivesService.findAll();
+        if (addType.equalsIgnoreCase("SYRUP")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.SYRUP)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "SYRUP");
+        } else if (addType.equalsIgnoreCase("ALCOHOL")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ALCOHOL)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "ALCOHOL");
+        } else if (addType.equalsIgnoreCase("MILK")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.MILK)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "MILK");
+        } else if (addType.equalsIgnoreCase("ADD")) {
+            List<CoffeeAdditive>productList = coffeeAdditiveList.stream().
+                    filter(coffeeAdditive -> coffeeAdditive.getCoffeeAdditiveType().
+                            equals(CoffeeAdditiveType.ADD)).collect(Collectors.toList());
+            System.out.println(productList);
+            model.addAttribute("productList", productList);
+            model.addAttribute("type", "ADD");
+        }
+
+
+        return "/Admin/Menu/additives-card";
+    }
+    @GetMapping("/add-delete/{id}")
+    public String delleteAdd(@PathVariable("id") Long id) {
+        String tmp = coffeeAdditivesService.findById(id).getCoffeeAdditiveType().name();
+        coffeeAdditivesService.deleteById(id);
+        return "redirect:/menu/admin-menu-additives/"+tmp;
+    }
 }

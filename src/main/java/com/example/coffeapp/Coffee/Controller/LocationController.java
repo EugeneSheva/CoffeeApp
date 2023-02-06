@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +19,7 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/location")
 public class LocationController {
     @Value("${upload.path}")
 
@@ -35,12 +33,11 @@ public class LocationController {
     public String getLocationList(Model model) {
         List<Location> locationList = locationService.findAll();
         model.addAttribute("location", locationList);
-        System.out.println(locationList);
         return "/Admin/admin-locations";
     }
 
 
-    @GetMapping("location-update/{id}")
+    @GetMapping("/location-update/{id}")
     public String coffeeEdit(@PathVariable("id") Long id, Model model) {
         Location location = locationService.findById(id);
         model.addAttribute("location", location);
@@ -48,7 +45,7 @@ public class LocationController {
     }
 
 
-    @GetMapping("location-create")
+    @GetMapping("/location-create")
     public String newCoffeeCreate(Model model) {
         Location location = new Location();
         model.addAttribute("location", location);
@@ -56,7 +53,7 @@ public class LocationController {
     }
 
 
-    @GetMapping("location-delete/{id}")
+    @GetMapping("/location-delete/{id}")
     public String delleteCoffee(@PathVariable("id") Long id) {
         Location obj = locationService.findById(id);
         try {
@@ -65,7 +62,7 @@ public class LocationController {
             throw new RuntimeException(e);
         }
         locationService.deleteById(id);
-        return "redirect:/admin-locations";
+        return "redirect:/location/admin-locations";
     }
 
 
@@ -107,7 +104,7 @@ public class LocationController {
 
         locationService.save(location);
 
-        return "redirect:/admin-locations";
+        return "redirect:/location/admin-locations";
     }
 
 }

@@ -19,31 +19,81 @@
                 <div class="sidebar-header">
                     <h3> KOFAN Admin</h3>
                 </div>
-                <a href="/admin-statistics" >Статистика</a>
-                <a href="/admin-menu" >Меню</a>
-                <a href="/admin-locations" >Локации</a>
-                <a href="/admin-pages" >Страницы</a>
-                <a href="/admin-users" >Пользователи</a>
-                <a href="/admin-orders" >Заказы</a>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR')">
+                    <a href="/statistics/admin-statistics">Статистика</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR')">
+                    <a href="/menu/admin-menu">Меню</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR')">
+                    <a href="/location/admin-locations">Локации</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR')">
+                    <a href="/page/admin-pages">Страницы</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR')">
+                    <a href="/user/admin-users">Пользователи</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_SELLER','ROLE_DIRECTOR')">
+                    <a href="/order/admin-orders">Заказы</a>
+                </div>
             </div>
         </div>
         <div class="col-md-10" >
             <div id="content">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
-                        <center><h2>Кофе</h2></center>
-                        <form class="d-flex">
-                            <button  type="button" class="btn btn-secondary">Выход</button>
+                        <a href="/menu/admin-menu" class="btn btn-secondary">Назад</a>
+                        <form class="d-flex" th:action="@{/logout}" method="post">
+                            <input type="submit" class="btn btn-secondary" value="Выход"/>
                         </form>
                     </div>
                 </nav>
                 <br>
 
 
-    <h2>Users</h2>
 
+                <div th:switch="${productList}">
+                    <h2 th:case="null">Добавьте продукт</h2>
+                    <div th:case="*">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Тип</th>
+                                <th>Работа с добавкой</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="product : ${productList}">
+                                <td th:text="${product.id}"></td>
+                                <td th:text="${product.name}"></td>
+                                <td th:text="${product.price}"></td>
+                                <td th:text="${product.coffeeAdditiveType}"></td>
+                                <td><div class="btn-group" role="group" aria-label="Basic outlined button group">
+                                    <a th:href="@{/menu/coffeeAdd-update/{id}(id=${product.id})}" class="btn btn-secondary ">Редактировать</a>
+                                    <a th:href="@{/menu/coffeeAdd-delete/{id}(id=${product.id})}" class="btn btn-danger ">Удалить</a>
+                                </div></td>
+                            </tr>
+                            <form th:method="POST" th:action="@{/menu/add-save}" th:object="${coffeeAdditive}"
+                                  enctype="multipart/form-data">
+                                <td><input type="hidden" class="form-control" th:field="*{id}" name="id"></td>
+                                <td><input type="text" class="form-control" th:field="*{name}" name="name"></td>
+                                <td><input type="text" class="form-control" th:field="*{price}" name="price"></td>
+                                <td><input readonly type="text" class="form-control" th:value="${type}" name="coffeeAdditiveType"></td>
+                                <td><div class="btn-group" role="group" aria-label="Basic outlined button group">
+                                    </div></td>
+                                </tr>
+                                <button type="submit" class="btn btn-secondary">Сохранить</button>
+                            </form>
+                            </tbody>
+                        </table>
 
-
+                    </div>
+                </div>
+                <br>
             </div>
         </div>
     </div>
@@ -57,5 +107,6 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="/JS/Upload.js"></script>
+
 </body>
 </html>

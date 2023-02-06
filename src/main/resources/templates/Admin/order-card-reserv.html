@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кофе</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/CSS/Sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/CSS/Upload.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidenav">
+                <div class="sidebar-header">
+                    <h3> KOFAN Admin</h3>
+                </div>
+                <a href="/admin-statistics">Статистика</a>
+                <a href="/admin-menu">Меню</a>
+                <a href="/admin-locations">Локации</a>
+                <a href="/admin-pages">Страницы</a>
+                <a href="/admin-users">Пользователи</a>
+                <a href="/admin-orders">Заказы</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div id="content">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                        <center><h2>Заказ</h2></center>
+                        <form class="d-flex">
+                            <button type="button" class="btn btn-secondary">Выход</button>
+                        </form>
+                    </div>
+                </nav>
+                <br>
+                <!--Content-->
+                <form th:method="POST" th:action="@{/order-card-save}" th:object="${order}"
+                      enctype="multipart/form-data">
+                    <div th:object="${orderedProductListDTO}"></div>
+                    <div th:switch="${orderedProductListDTO.orderedProductList}">
+<!--                        <h2 th:text="${orderedProductListDTO.orderedProductList}"></h2>-->
+                        <h2 th:case="null">Добавьте продукт</h2>
+                        <div th:case="*">
+                            <div class="row row-cols-1 row-cols-sm-1 g-1" id="2">
+                                <div class="col" id="1"
+                                     th:each="orderedProduct, itemStat : ${orderedProductListDTO.orderedProductList}">
+                                    <div class="card">
+                                        <label for="orderedProductId"></label>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <label for="orderedProductId">Продукт</label>
+                                                <input readonly type="text"
+                                                       th:value="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].product.name}"
+                                                       class="form-control">
+                                                <input hidden type="text"
+                                                       th:field="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].product}" class="form-control" id="product">
+<!--                                                       th:value="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].product.id}"-->
+
+                                                <br>
+                                                <label for="orderedProductId">Добавки</label>
+                                                <input readonly type="text"
+                                                       th:field="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].coffeeAdditiveList}"
+                                                       class="form-control" id="additives">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="quantity">Колличество</label>
+                                                <input readonly type="text"
+                                                       th:field="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].quantity}"
+                                                       class="form-control" id="quantity">
+                                                <br>
+                                                <label for="quantity">Размер</label>
+                                                <input readonly type="text"
+                                                       th:field="${orderedProductListDTO.orderedProductList[__${itemStat.index}__].size}"
+                                                       class="form-control" id="size">
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                        форма создания продукта-->
+
+                    <div>
+                        <div class="card" hidden th:object="${orderedProduct}" id="ordProdCard">
+                            <label for="orderedProductId"></label>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="orderedProductId">Продукт</label>
+                                    <select class="form-select" th:field="${orderedProduct.product}"
+                                            id="orderedProductId"
+                                            aria-label="Default select" th:onchange="updateOrderedProduct()">
+                                        <option value=" ">Выберите продукт</option>
+                                        <option th:each="product : ${allProductList}"
+                                                th:text="${product.name}" th:value="${product.id}" name="nproduct"
+                                                value=" "></option>
+                                    </select>
+                                    <br>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="quantity">Колличество</label>
+                                    <input type="text" class="form-control" id="nquantity" value="1"
+                                           placeholder="1" name="quantity">
+                                </div>
+                            </div>
+                            <div id="orderedProductInfo">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="add1" aria-label="Default select">
+                                            <option>Выберите добавку</option>
+                                            <option th:each="syrup : ${syrups}" th:value="${syrup}"
+                                                    th:text="${syrup.name}" name="coffeeAdditiveList"></option>
+                                        </select>
+                                        <label for="orderedProductId">Сиропы</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="add2" aria-label="Default select">
+                                            <option>Выберите добавку</option>
+                                            <option th:each="alcohol : ${alcohols}" th:value="${alcohol.id}"
+                                                    th:text="${alcohol.name}" name="coffeeAdditiveList"></option>
+                                        </select>
+                                        <label for="orderedProductId">Алкоголь</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="add3" aria-label="Default select">
+                                            <option>Выберите добавку</option>
+                                            <option th:each="milk : ${milks}" th:value="${milk.id}"
+                                                    th:text="${milk.name}" name="coffeeAdditiveList"></option>
+                                        </select>
+                                        <label for="orderedProductId">Молоко</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="add4" aria-label="Default select">
+                                            <option>Выберите добавку</option>
+                                            <option th:each="additive : ${additives}" th:value="${additive.id}"
+                                                    th:text="${additive.name}" name="coffeeAdditiveList"></option>
+                                        </select>
+                                        <label for="orderedProductId">Добавки</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="nsize" aria-label="Default select">
+                                            <option>Выберите размер</option>
+                                            <option th:each="additive : ${additives}" th:value="${additive.id}"
+                                                    th:text="${additive.name}" name="size"></option>
+                                        </select>
+                                        <label for="orderedProductId">Добавки</label>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <button type="submit" formaction="add-ordered-product-to-list"
+                                    class="btn btn-secondary">Добавить
+                            </button>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <a class="btn btn-secondary" onclick="addOrderedProductCard()">Добавить продукт</a>
+
+                    <input type="hidden" class="form-control" th:field="*{id}" id="id">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <!--         Изменить!!! юзер вводится вручную           -->
+                            <label for="user">Заказчик</label>
+                            <input type="text" class="form-control" th:field="*{user}" id="user" value="ADMIN"
+                                   placeholder="Пользователь">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="orderStatus">Статус</label>
+                            <select class="form-select" th:field="*{orderStatus}" id="orderStatus"
+                                    aria-label="Default select">
+
+                                <option th:value="ORDERED" th:text="Заказан"></option>
+                                <option th:value="READY" th:text="Готов"></option>
+                                <option th:value="COMPLETED" th:text="Выдан"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-secondary">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script th:inline="javascript">
+    let ordProdDiv = $("#orderedProducts");
+
+
+    function addOrderedProductCard() {
+        document.getElementById("ordProdCard").removeAttribute("hidden");
+    }
+
+    function updateOrderedProduct() {
+        $.ajax({
+            url: 'check-ordered-product-type',
+            method: 'GET',
+            traditional: true,
+            data: {id: $('#orderedProductId').val()},
+            success: function (data) {
+                data === 'coffee' ? ($("#orderedProductInfo").show(), console.log("+")) :
+                    ($("#orderedProductInfo").hide(), console.log("-"));
+
+            }
+        });
+    }
+
+    //
+    // function addOrderedProduct() {
+    //     console.log("1");
+    //     // $("orderedProducts").clone().appendTo("includedContent");
+    //     var clone = $("#1").clone();
+    //
+    //     $("#2").append(clone);
+    //     console.log("2");
+    // }
+
+
+</script>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="/JS/Upload.js"></script>
+</body>
+</html>

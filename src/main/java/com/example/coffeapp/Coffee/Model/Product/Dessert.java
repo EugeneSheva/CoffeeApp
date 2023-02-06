@@ -7,14 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class Dessert{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    String description;
-    String image;
-    String sValue;
-    Double sPrice;
+public class Dessert extends Product{
+
 }
 

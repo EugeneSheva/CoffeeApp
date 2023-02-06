@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователь</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/CSS/Sidebar.css"/>
+    <link rel="stylesheet" type="text/css" href="/CSS/Upload.css"/>
+</head>
+<style>table, th, td {
+    border: 1px solid grey;
+    text-align: center;
+}
+
+th, td {
+    padding: 10px;
+}
+
+caption {
+    font-size: 20px;
+    color: #696969;
+}</style>
+<body>
+<div class="container-fluid">
+    <form th:method="POST" th:object="${user}" th:action="@{/registration}" enctype="multipart/form-data">
+        <div><p th:if="${message}" th:text="${message}">message></p></div>
+        <label for="id"></label>
+        <input type="hidden" id="id" class="form-control" th:field="*{id}" placeholder="">
+
+        <label for="user_name">Логин</label>
+        <input type="text" class="form-control" th:field="*{userName}" id="user_name" placeholder="Taras777">
+
+        <label for="name">Имя</label>
+        <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="Тарас Шевченко">
+
+        <label for="phoneNumber">Номер телефона</label>
+        <input type="number" class="form-control" th:field="*{phoneNumber}" id="phoneNumber"
+               placeholder="введите номер телефона">
+
+        <label for="dateOfBirth">Дата рожденя</label>
+        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" class="form-control" placeholder="Дата рождения">
+
+        <br>
+        <h7>Язык</h7>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" th:field="*{language}" type="radio" name="radioInline"
+                   id="inlineRadioDefault" value="ukrainian">
+            <label class="form-check-label" for="inlineRadioDefault">Українська</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" th:field="*{language}" type="radio" name="radioInline"
+                   id="inlineRadioChecked" checked="" value="russian">
+            <label class="form-check-label" for="inlineRadioChecked">Русский</label>
+        </div>
+        <br>
+
+
+        <label for="password">Пароль</label>
+        <input type="text" class="form-control" th:field="*{password}" id="password" placeholder="введите пароль">
+
+        <label for="repassword">Повторите пароль</label>
+        <input type="text" class="form-control" id="repassword" placeholder="введите пароль">
+
+        <label for="dateOfRegistry"></label>
+        <input type="hidden" id="dateOfRegistry" class="form-control" th:field="*{dateOfRegistry}" placeholder="">
+        <script>
+            document.getElementById('dateOfRegistry').value = new Date().toISOString().substring(0, 10);
+        </script>
+        <br>
+        <!--                    <h7>Роль</h7>-->
+        <!--                    <div class="form-check form-check-inline">-->
+        <!--                        <input class="form-check-input" th:field="*{role}" type="radio" name="radioInline" id="role" checked="" value="USER">-->
+        <!--                        <label class="form-check-label" for="role">Пользователь</label>-->
+        <!--                    </div>-->
+        <!--                    <div class="form-check form-check-inline">-->
+        <!--                        <input class="form-check-input" th:field="*{role}" type="radio" name="radioInline" id="role" value="ADMIN">-->
+        <!--                        <label class="form-check-label" for="role">Админ</label>-->
+        <!--                    </div>-->
+        <!--                    <div class="form-check form-check-inline">-->
+        <!--                        <input class="form-check-input" th:field="*{role}" type="radio" name="radioInline" id="role" value="DIRECTOR">-->
+        <!--                        <label class="form-check-label" for="role">Директор</label>-->
+        <!--                    </div>-->
+        <!--                    <br>-->
+        <!--                    <br>-->
+        <!--                    <h7>Статус</h7>-->
+        <!--                    <div class="form-check form-check-inline">-->
+        <!--                        <input class="form-check-input" th:field="*{status}" type="radio" name="radioInline" id="status" checked="" value="ACTIVE">-->
+        <!--                        <label class="form-check-label" for="status">Активный</label>-->
+        <!--                    </div>-->
+        <!--                    <div class="form-check form-check-inline">-->
+        <!--                        <input class="form-check-input" th:field="*{status}" type="radio" name="radioInline" id="status" value="BLOCK">-->
+        <!--                        <label class="form-check-label" for="status">Заблокирован</label>-->
+        <!--                    </div>-->
+
+        <br>
+        <br>
+        <button type="submit" class="btn btn-secondary">Сохранить</button>
+    </form>
+</div>
+
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
