@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Please sign in</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+</head>
+<body>
+<div class="container">
+
+    <form th:method="POST" th:object="${user}"  th:action="@{registration}"  enctype="multipart/form-data"  >
+        <center><h2 class="form-signin-heading">KOFAN Admin</h2></center>
+                <center><h6 class="form-signin-heading">Регистрация нового пользователя.</h6></center>
+        <label for="id"></label>
+        <input  type="hidden" id="id" class="form-control" th:field="*{id}" placeholder="">
+        <h6 th:if="${message}" th:text="${message}"></h6>
+
+        <label for="user_name">Номер телефона</label>
+        <h6 th:if="${regError}" th:text="${regError}"></h6>
+        <input type="number" class="form-control" th:field="*{username}" id="user_name" placeholder="0630636363">
+        <div style="color: #d80450" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+
+        <label for="name">Имя</label>
+        <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="Тарас Шевченко">
+        <div style="color: #d80450" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+        <label for="dateOfBirth">Дата рожденя</label>
+        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" class="form-control"  placeholder="Дата рождения">
+        <div style="color: #d80450" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
+        <br>
+        <h7>Язык</h7>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" th:field="*{language}" type="radio" name="radioInline" id="inlineRadioDefault" value="ukrainian">
+            <label class="form-check-label" for="inlineRadioDefault">Українська</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" th:field="*{language}" type="radio" name="radioInline" id="inlineRadioChecked" checked=""value="russian">
+            <label class="form-check-label" for="inlineRadioChecked">Русский</label>
+        </div>
+        <div style="color: #d80450" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></div>
+        <br>
+
+
+        <label for="password">Пароль</label>
+        <input type="password" class="form-control" th:field="*{password}" name="password" id="password" placeholder="введите пароль">
+        <div style="color: #d80450" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
+        <label for="repassword">Повторите пароль</label>
+        <input type="password" class="form-control" name="repassword" id="repassword" placeholder="введите пароль">
+
+        <label for="dateOfRegistry"></label>
+        <input  type="hidden" id="dateOfRegistry" class="form-control" th:field="*{dateOfRegistry}" placeholder="">
+        <script>
+            document.getElementById('dateOfRegistry').value = new Date().toISOString().substring(0, 10);
+        </script>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-secondary">Сохранить</button>
+    </form>
+</div>
+</body></html>

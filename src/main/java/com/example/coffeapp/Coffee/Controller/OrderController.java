@@ -36,7 +36,7 @@ public class OrderController {
     private final CoffeeAdditivesService coffeeAdditivesServiceService;
     private final CoffeeAdditivesService coffeeAdditivesService;
 
-    @GetMapping("/admin-orders")
+    @GetMapping("/admin-order")
     public String findOrders(Model model) {
         List<Order> orders = orderService.findAll();
         model.addAttribute("orders", orders);
@@ -176,20 +176,14 @@ public class OrderController {
         return "/Admin/order-card";
     }
 
-//    @PostMapping("/admin-hall-card-add")
-//    public String createHall(RedirectAttributes redirectAttrs) {
-//        redirectAttrs.addFlashAttribute("hall", hall);
-//    }
-
-
-
 
     @RequestMapping(value = "/get-ordered-product-price", method = RequestMethod.GET, produces = {"text/html; charset=UTF-8"})
     public @ResponseBody String sendPrice(@RequestParam(name = "product", defaultValue = "0") Long productId, @RequestParam(name = "quantity", defaultValue = "1") Long quantity, @RequestParam(name = "add1", defaultValue = "0") Long add1, @RequestParam(name = "add2", defaultValue = "0") Long add2, @RequestParam(name = "add3", defaultValue = "0") Long add3, @RequestParam(name = "add4", defaultValue = "0") Long add4,  @RequestParam(name = "size", defaultValue = "") String size) {
+        System.out.println("get-ordered-product-price start");
         Double sum = 0d;
         String calc = "";
         Product product = productService.findById(productId);
-        if (productService.getType(productId).equalsIgnoreCase("Coffee")) {
+        if (product.getType().equalsIgnoreCase("Coffee")) {
             Coffee coffee = coffeeService.findById(productId);
             Double sizePrice = 0d;
             List<CoffeeAdditive> CALIst = new ArrayList<>();
@@ -227,30 +221,39 @@ public class OrderController {
             sum += product.getSPrice() * quantity;
             calc += product.getSPrice() + " X " + quantity + " = " + sum+"грн.";
         }
-        System.out.println("calc" + calc);
+        System.out.println("get-ordered-product-price fin");
         return calc;
     }
 
     @RequestMapping(value = "/check-ordered-product-type", method = RequestMethod.GET, produces = {"text/html; charset=UTF-8"})
     public @ResponseBody String sendList(@RequestParam("id") Long id) {
-        if (productService.getType(id).equalsIgnoreCase("Coffee")) {
+
+        if (productService.findById(id).getType().equalsIgnoreCase("Coffee")) {
             Product product = productService.findById(id);
-            System.out.println(product.getSizes());
+            System.out.println("product = " + product);
             String tmp = "<select class=\"form-select\" id=\"opSize\" name=\"opSize\" aria-label=\"Default select\" required>\n" +
-                    "                                            <option >Выберите размер</option>\n";
+                    "   <option value=\"\">Выберите размер</option>                                         ";
             for (String size : product.getSizes()) {
                 if (size != null)
                 tmp += "                                            <option value=\""+ size +"\">"+ size +"</option>\n";
             }
-            tmp += "                                        </select>\n" + "<label for=\"opSize\">Размер</label>" +
-            "<div id=\"validationServer04Feedback\" class=\"invalid-feedback\">\n" +
-                    "      Please select a valid state.";
+            tmp += "                                        </select>\n" +
+                    "<label for=\"opSize\">Размер</label>" +
+                    "<div class=\"invalid-feedback\">\n" +
+                    "      Пожалуйста, выберите размер."+
+                    "</div>";
             System.out.println(tmp);
             return  tmp;
         } else {
+            System.out.println("notcoffee");
             return "notcoffee";
+
         }
+
     }
+
+
+
 
     @RequestMapping(value = "/add-ordered-product-to-list", method = {RequestMethod.POST, RequestMethod.PUT})
     public String addOrderedProduct(RedirectAttributes redirectAttrs, @ModelAttribute Order order, @ModelAttribute OrderedProduct orderedProduct,
@@ -275,7 +278,7 @@ public class OrderController {
 //calc
         Double sum = 0d;
         Product product = orderedProduct.getProduct();
-        if (productService.getType(product).equalsIgnoreCase("Coffee")) {
+        if (product.getType().equalsIgnoreCase("Coffee")) {
             Coffee coffee = coffeeService.findById(product.getId());
 
             if (orderedProduct.getSize().equalsIgnoreCase("S")) {
@@ -326,7 +329,6 @@ public class OrderController {
 
         if(order.getUser() == null) order.setUser(userService.findByUserName(username));
 
-
         orderedProduct.setSize(opSize);
 
         for (int i = 0; i < order.getOrderedProductList().size(); i++) {
@@ -344,7 +346,7 @@ public class OrderController {
         if (orderedProduct.getProduct() != null) {
             Double sum = 0d;
             Product product = orderedProduct.getProduct();
-            if (productService.getType(product).equalsIgnoreCase("Coffee")) {
+            if (product.getType().equalsIgnoreCase("Coffee")) {
                 Coffee coffee = coffeeService.findById(product.getId());
 
                 if (orderedProduct.getSize().equalsIgnoreCase("S")) {

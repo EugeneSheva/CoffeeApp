@@ -15,13 +15,15 @@ import javax.persistence.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    String description;
-    String image;
-    String sValue;
-    Double sPrice;
-    String[] sizes;
+    private Long id;
+    @Column(name = "type", insertable = false, updatable = false)
+    private String type;
+    private String name;
+    private String description;
+    private String image;
+    private String sValue;
+    private Double sPrice;
+    private String[] sizes;
 
 
 }

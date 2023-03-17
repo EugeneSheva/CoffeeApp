@@ -5,6 +5,7 @@ import com.example.coffeapp.Coffee.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +26,8 @@ public class OrderService {
     public List<Order>findOrdersByUser_Id(Long id) {return orderRepository.findOrdersByUser_Id(id);}
 
     public List<Order>findOrdersByLocationId(Long id) {return orderRepository.findOrdersByLocationId(id);}
+
+    public List<Order>findOrdersByDateOfOrderBetween(Date from, Date to) {return orderRepository.findOrdersByDateOfOrderBetween(from, to);}
 
 
 }

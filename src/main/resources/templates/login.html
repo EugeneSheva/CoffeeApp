@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,9 +13,15 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" method="post" action="/login">
+    <form class="form-signin" method="post" action="login">
         <center><h2 class="form-signin-heading">KOFAN Admin</h2></center>
-        <center><h2 class="form-signin-heading">Please sign in</h2></center>
+        <center><h6 th:if="${regComplete}" th:text="${regComplete}"></h6></center>
+        <center><h6 class="form-signin-heading">Пожалуйста, войдите</h6></center>
+
+        <div th:if="${param.error}">
+            Неверный логин или пароль.</div>
+        <div th:if="${param.logout}">
+            Вы вышли из аккаунта.</div>
         <p>
             <label for="username" class="sr-only">Username</label>
             <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
@@ -23,7 +30,9 @@
             <label for="password" class="sr-only">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         </p>
-        <button class="btn btn-lg btn-secondary btn-block" type="submit">Sign in</button>
+
+        <button class="btn btn-lg btn-secondary btn-block" type="submit">Войти</button>
+        <a th:href="@{/registration}" class="btn btn-lg btn-secondary btn-block">Регистрация</a>
     </form>
 </div>
 </body></html>

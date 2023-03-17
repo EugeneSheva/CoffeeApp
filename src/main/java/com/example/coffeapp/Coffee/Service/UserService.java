@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("userService")
@@ -33,5 +34,9 @@ public class UserService{
     public void deleteById(Long id) { userRepository.deleteById(id); }
 
     public User findByUserName(String username) { return userRepository.findByUsername(username); }
+
+    public List<User> findUsersByDateOfRegistryBetween(Date from, Date to) {
+        return userRepository.findUsersByDateOfRegistryBetween(from, to);
+    }
 
     }

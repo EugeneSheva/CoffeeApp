@@ -21,4 +21,6 @@ public class OrderedProductService {
     public OrderedProduct save(OrderedProduct orderedProduct) { return orderedProductRepository.save(orderedProduct); }
 
     public void deleteById(Long id) { orderedProductRepository.deleteById(id); }
+
+    public List<OrderedProduct> findAllByProductId(Long id) { return orderedProductRepository.findAllByProduct_Id(id); }
 }

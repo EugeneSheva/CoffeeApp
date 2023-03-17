@@ -17,4 +17,19 @@ public class Location {
     String description;
     String image;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="location")
+    private List<Order> orders;
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", phoneNunber=" + phoneNunber +
+                ", coordinates=" + coordinates +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                ", orders=" + orders.size() +
+                '}';
+    }
 }

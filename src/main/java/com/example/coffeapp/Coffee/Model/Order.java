@@ -62,4 +62,19 @@ public class Order {
         return str;
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", price=" + price +
+                ", deliveryType=" + deliveryType +
+                ", paymentType=" + paymentType +
+                ", orderStatus=" + orderStatus +
+                ", dateOfOrder=" + dateOfOrder +
+                ", user=" + user +
+                ", location=" + location +
+                ", address=" + address +
+                ", orderedProductList=" + orderedProductList.size() +
+                '}';
+    }
 }

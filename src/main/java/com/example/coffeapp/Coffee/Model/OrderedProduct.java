@@ -3,9 +3,11 @@ package com.example.coffeapp.Coffee.Model;
 import com.example.coffeapp.Coffee.Model.Additives.CoffeeAdditive;
 import com.example.coffeapp.Coffee.Model.Product.Product;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,9 +20,6 @@ public class OrderedProduct {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "product_id")
         Product product;
-
-
-
         @ManyToMany
         @JoinTable( name = "coffe_additives_in_ordered_product",
                 joinColumns = { @JoinColumn(name = "ordered_product_id") },
@@ -30,6 +29,11 @@ public class OrderedProduct {
         Long quantity;
         String size;
         Double price;
+
+        @Temporal(TemporalType.DATE)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        Date date;
+
 
 //        @ManyToOne(fetch = FetchType.EAGER)
 //        @JoinColumn (name = "orderId")

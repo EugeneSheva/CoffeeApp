@@ -1,0 +1,39 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: myproject
+      MYSQL_USER: myprojectuser
+      MYSQL_PASSWORD: myprojectpassword
+
+
+
+
+#version: '3'
+#services:
+#  web:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mydb?useSSL=false&serverTimezone=UTC
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#  db:
+#    image: mysql:8
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: mydb
+#    ports:
+#      - "3307:3307"

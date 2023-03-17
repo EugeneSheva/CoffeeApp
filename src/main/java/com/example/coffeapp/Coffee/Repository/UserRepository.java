@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -15,8 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Override
     List<User> findAllById(Iterable<Long> idusers);
-
     User findByUsername(String username);
+    List<User> findUsersByDateOfRegistryBetween(Date dateOfRegistry, Date dateOfRegistry2);
 
 
 }

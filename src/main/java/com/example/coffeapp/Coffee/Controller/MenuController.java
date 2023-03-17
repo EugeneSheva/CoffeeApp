@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class MenuController {
     @Value("${upload.path}")
     private String uploadPath;
-    private File uploadDir;
+
 
     private final CoffeeService coffeeService;
     private final TeaService teaService;
