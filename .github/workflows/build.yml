@@ -25,3 +25,5 @@ jobs:
           source: target/*.war
           target: /home/avada/web/kino.avada-media-dev1.od.ua/tomcat/webapps
           strip_components: 1
+
+#123
